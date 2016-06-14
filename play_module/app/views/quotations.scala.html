@@ -1,51 +1,50 @@
-@(quotationForm: Form[model.QuotationFormData],quotations : Seq[model.Quotation])(implicit request: RequestHeader)
+@import helper._
+@(quotationForm: Form[model.QuotationFormData], indexForm: Form[model.IndexFormData], quotations : Seq[model.Quotation], companyNames : Seq[String])(implicit request: RequestHeader)
 @main() {
 
 <div class="container-fluid">
     <div class="row">
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Dashboard</h1>
+        <div class="col-sm-9 col-sm-3 col-md-10 col-md-2 main">
+            <h1 class="page-header">Reactive Stock</h1>
 
             <div class="row">
-                <div class="col-md-4">
-                    <h4>Test</h4>
-                    <p>Run test index. </p>
-                    <p><a class="btn btn-default" href="#" role="button">Run &raquo;</a></p>
-                </div>
-                <div class="col-md-4">
-                    <h4>Moving Average</h4>
-                    <p></p>
-                    <p><a class="btn btn-default" href="#" role="button">Run &raquo;</a></p>
-                </div>
-                <div class="col-md-4">
-                    <h4>Ease of Movement</h4>
-                    <p></p>
-                    <p><select id="select">
-                        @for(quotation <- quotations){
-                        <option value="@quotation.company_name">@quotation.company_name</option>
-                        }
-                    </select>
-                        <a class="btn btn-default" href="#" role="button">Run &raquo;</a></p>
-                </div>
-                <div class="col-md-4">
-                    <h4>Average True Range</h4>
-                    <p></p>
-                    <p>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            Run
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            @for(quotation <- quotations){
-                            <li>@quotation.company_name</li>
-                            }
-                        </ul>
+                <form id="quotation-data-form" role="form" action='@routes.QuotationsController.runIndex()'
+                      method="post">
+                    <div class="col-md-4">
+                        <h4>Test</h4>
+                        <p>Run test index. </p>
+                        <p>
+                            <select multiple class="form-control" id=company_id">
+                                <option value="ALL">ALL</option>
+                                @for(companyName <- companyNames){
+                                <option value="@companyName">@companyName</option>
+                                }
+                            </select>
+                        </p>
+                        <p>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="INDEX_1">Test
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="INDEX_1">Moving
+                                Average
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="INDEX_1">Ease of
+                                Movement
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio4" value="INDEX_1">Average
+                                True Range
+                            </label>
+                        </p>
+                        <p>
+                            <button type="submit" class="btn btn-default">Run &raquo;</button>
+                        </p>
                     </div>
-                    </p>
-                </div>
+                </form>
+
             </div>
 
 
@@ -54,8 +53,8 @@
                 <p>
                 <h3>Select company</h3>
                 <select id="select_company">
-                    @for(quotation <- quotations){
-                    <option value="@quotation.company_name">@quotation.company_name</option>
+                    @for(companyName <- companyNames){
+                    <option value="@companyName">@companyName</option>
                     }
                 </select>
 
