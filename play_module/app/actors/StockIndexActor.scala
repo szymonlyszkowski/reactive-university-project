@@ -1,19 +1,17 @@
 package actors
 
 import java.text.SimpleDateFormat
-import java.time.{LocalDate, ZoneId}
 import java.util.Date
 
 import akka.actor._
 import akka.routing.RoundRobinPool
-import akka.util.Timeout
-import model.{IndexName, Quotation}
 import model.IndexName._
+import model.{IndexCalculationResult, IndexName, Quotation, Result}
 import services.QuotationService
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 sealed trait StockIndexMessage
 
@@ -36,7 +34,7 @@ object StockIndexActor {
     * @param indexName Index name used for computation
     * @param companyNames Ticker symbols for the particular stock on the market
     */
-  def calculateUsingActorsWithWorkersAmountOf(workersAmount: Int, indexName: IndexName, companyNames: Seq[String]) = {
+  def calculateUsingActorsWithWorkersAmountOf(workersAmount: Int, indexName: IndexName, companyNames: Seq[String], dateFrom: Date, dateTo: Date) = {
 
     // Create an Akka system
     val system = ActorSystem("StockIndexActorSystem")
@@ -51,7 +49,15 @@ object StockIndexActor {
     master ! Calculate
 
     // Meet the IndexService Future value requirement
-    Future.successful(1.0)
+    //TODO return Actor calculations
+    // List[IndexResult]
+    // IndexResult:
+    // Index: String
+    // Result: Double
+
+    val rdy = Await.ready(Future.successful(master ! Calculate), Duration.Inf)
+    val results = Seq(IndexCalculationResult("indexName", 0), IndexCalculationResult("indexName2",0))
+    Future.successful(new Result(indexName.toString, results))
 
   }
 

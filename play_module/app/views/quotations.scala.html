@@ -1,5 +1,5 @@
 @import helper._
-@(quotationForm: Form[model.QuotationFormData], indexForm: Form[model.IndexFormData], quotations : Seq[model.Quotation], companyNames : Seq[String], result: Double)(implicit request: RequestHeader)
+@(quotationForm: Form[model.QuotationFormData], indexForm: Form[model.IndexFormData], quotations : Seq[model.Quotation], companyNames : Seq[String], result: model.Result)(implicit request: RequestHeader)
 @main() {
 <div class="container-fluid">
     <div class="row">
@@ -23,14 +23,14 @@
                             <h4>Date range</h4>
                             Date from:
                             <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control" name="date_from" value="05-04-2015">
+                                <input type="text" class="form-control" name="start_date" value="2015-05-04">
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
                             </div>
                             Date to:
                             <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control" name="date_to" value="04-29-2016">
+                                <input type="text" class="form-control" name="end_date" value="2016-04-29">
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
@@ -65,10 +65,12 @@
                     </div>
                 </form>
             </div>
-            @if(result != 0){
+            @if(result != null){
                 <div class="row text-center">
-                    <h2 class="sub-header">Result</h2>
-                    <h3><b>@result</b></h3>
+                    <h2 class="sub-header">Result - @result.indexName</h2>
+                    @for(companyResult <- result.companyResults){
+                    <h3><b>@companyResult.companyName : @companyResult.indexResult</b></h3>
+                    }
                 </div>
             }
             <h2 class="sub-header">Quotations</h2>
